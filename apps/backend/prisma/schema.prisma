@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id             String   @id @default(uuid())
+  alias          String  @unique
+  name           String
+  password       String
+  date           DateTime
+  place          String
+  description    String
+  image          String
+  imgBackground  String
+  publicExpected Int
+  guests         Guest[]
+
+  @@map("eventos")
+}
+
+model Guest {
+  id             String  @id @default(uuid())
+  name           String
+  email          String
+  confirmed      Boolean
+  hasCompanion   Boolean
+  manyCompanions Int
+  Event          Event?  @relation(fields: [eventId], references: [id])
+  eventId        String?
+
+  @@map("convidados")
+}
